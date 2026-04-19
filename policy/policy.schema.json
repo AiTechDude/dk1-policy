@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DK1 Enterprise Policy",
+  "type": "object",
+  "required": [
+    "policy_version",
+    "compliance",
+    "families",
+    "required_checks",
+    "required_log_fields",
+    "feature_flag_required_fields"
+  ],
+  "properties": {
+    "policy_version": {"type": "string", "pattern": "^v\\d+\\.\\d+\\.\\d+$"},
+    "compliance": {
+      "type": "object",
+      "required": ["soc2", "iso27001"],
+      "properties": {
+        "soc2": {"type": "string"},
+        "iso27001": {"type": "string"}
+      }
+    },
+    "families": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "platforms"],
+        "properties": {
+          "name": {"type": "string"},
+          "platforms": {
+            "type": "array",
+            "items": {"type": "string", "enum": ["web", "macos", "ios"]}
+          }
+        }
+      }
+    },
+    "required_checks": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "required_log_fields": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "feature_flag_required_fields": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  }
+}

@@ -1,0 +1,9 @@
+control_id,policy_rule,soc2_cc,iso27001_control,evidence_artifact
+CTRL-001,Canonical contract repository,CC8.1,A.8.32,contracts-sync logs
+CTRL-002,Version parity enforcement,CC7.2,A.8.32,family-platform-parity check
+CTRL-003,Breaking change governance,CC7.2,A.8.33,semver-governance check
+CTRL-004,Feature flag compatibility metadata,CC6.1,A.8.25,feature-flag-governance check
+CTRL-008,Project lifecycle synchronization governance,CC7.2,A.8.32,project-lifecycle-governance check
+CTRL-005,Observability required fields,CC7.2,A.8.15,telemetry-compliance check
+CTRL-006,Release approval gates,CC8.1,A.5.37,protected environment approvals
+CTRL-007,Nightly drift monitoring,CC7.2,A.8.16,guardian synchronization-health report

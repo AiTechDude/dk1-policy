@@ -1,0 +1,35 @@
+policy_version: v1.2.0
+compliance:
+  soc2: "Type II"
+  iso27001: "Mapped"
+families:
+  - name: jarvis
+    platforms: [web, macos, ios]
+  - name: command-center
+    platforms: [web, macos, ios]
+required_checks:
+  - policy-sync
+  - contracts-sync
+  - semver-governance
+  - family-platform-parity
+  - feature-flag-governance
+  - project-lifecycle-governance
+  - telemetry-compliance
+  - build-reproducibility
+  - release-readiness
+required_log_fields:
+  - timestamp
+  - family
+  - platform
+  - app_version
+  - api_version
+  - build_number
+  - feature_flags_active
+  - correlation_id
+  - environment
+feature_flag_required_fields:
+  - feature_name
+  - enabled
+  - min_version
+  - platform_allowlist
+  - rollout_percentage

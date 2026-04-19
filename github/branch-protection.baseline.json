@@ -1,0 +1,26 @@
+{
+  "required_status_checks": {
+    "strict": true,
+    "contexts": [
+      "policy-sync",
+      "contracts-sync",
+      "semver-governance",
+      "family-platform-parity",
+      "feature-flag-governance",
+      "project-lifecycle-governance",
+      "telemetry-compliance",
+      "build-reproducibility",
+      "release-readiness"
+    ]
+  },
+  "enforce_admins": true,
+  "required_pull_request_reviews": {
+    "required_approving_review_count": 1,
+    "dismiss_stale_reviews": true,
+    "require_code_owner_reviews": true
+  },
+  "restrictions": null,
+  "required_linear_history": true,
+  "allow_force_pushes": false,
+  "allow_deletions": false
+}

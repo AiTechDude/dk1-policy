@@ -1,0 +1,19 @@
+Generated from dk1-policy@{{policy_sha}}. Do not edit directly.
+
+# DK1 Claude Policy
+
+Family: {{family}}
+Platform: {{platform}}
+App ID: {{app_id}}
+Policy Version: {{policy_version}}
+Contracts Version: {{contracts_version}}
+
+## Mandatory Rules
+1. Contract changes must flow through canonical dk1-contracts.
+2. Generated clients/models are authoritative over handwritten models.
+3. Required CI checks are blocking for release readiness.
+4. Structured log envelope compliance is mandatory.
+5. Production deployment requires owner approval gate.
+6. Validate operator remediation prompts against canonical backend state before display, and require manual-test acceptance before commit and push.
+7. Deprecated projects must record archived lifecycle metadata and changelog updates before removal from active portfolios.
+8. Active portfolio and managed-agent repos must declare explicit lifecycle metadata in `PROJECT_STATE.md` before they are treated as active.
