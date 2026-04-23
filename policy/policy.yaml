@@ -33,3 +33,18 @@ feature_flag_required_fields:
   - min_version
   - platform_allowlist
   - rollout_percentage
+
+# Lance (agent fleet manager) governance scope.
+#
+# auto_approve: Lance is permitted to auto-approve ONLY risk_level=low
+# approvals whose (agent_id, request_type) matches an entry below. Every
+# other approval — including all medium / high / critical — waits for
+# human decision. Start conservative: add a pair only after you've seen
+# the request_type fire enough times to trust it is routine.
+lance:
+  auto_approve: []
+    # Example entries (uncomment once validated):
+    # - agent_id: toolwatch
+    #   request_type: tool_install_sandboxed
+    # - agent_id: dk1-doc-sentinel
+    #   request_type: doc_commit
