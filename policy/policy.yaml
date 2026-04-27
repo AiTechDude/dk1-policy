@@ -13,6 +13,23 @@ families:
   - web
   - macos
   - ios
+- name: dev-force-six
+  platforms:
+  - internal
+  internal_only: true
+approval_kinds:
+- name: deploy
+  default_risk: medium
+  auto_approve_low_risk: true
+- name: legacy_exception
+  default_risk: high
+  auto_approve_low_risk: false
+  required_fields:
+  - target_repo
+  - allowed_actions
+  - disallowed_actions
+  - rollback_command
+  - expiration
 required_checks:
 - policy-sync
 - contracts-sync
