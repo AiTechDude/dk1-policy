@@ -30,6 +30,14 @@ approval_kinds:
   - disallowed_actions
   - rollback_command
   - expiration
+- name: dev_team_run
+  default_risk: medium
+  auto_approve_low_risk: false
+  required_fields:
+  - task_id
+  - sandbox_repo_path
+  - branch
+  - validation_commands
 required_checks:
 - policy-sync
 - contracts-sync
