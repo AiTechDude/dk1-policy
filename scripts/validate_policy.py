@@ -11,6 +11,7 @@ REQUIRED_TOP_LEVEL = [
     "compliance:",
     "families:",
     "required_checks:",
+    "security_baseline:",
     "required_log_fields:",
     "feature_flag_required_fields:",
 ]
@@ -22,10 +23,19 @@ REQUIRED_CHECKS = {
     "family-platform-parity",
     "feature-flag-governance",
     "project-lifecycle-governance",
+    "security-baseline",
     "telemetry-compliance",
     "build-reproducibility",
     "release-readiness",
 }
+
+REQUIRED_SECURITY_BASELINE_TOKENS = [
+    "existing_repo_grace_ends_at: \"2026-05-18\"",
+    "new_repos_require_from_day_one: true",
+    "exemption_file: security/baseline-exemption.json",
+    "rollout_owner: dev-force-lead",
+    "rollout_requires_legacy_exception_order: true",
+]
 
 
 def main() -> int:
@@ -43,6 +53,11 @@ def main() -> int:
     for check in REQUIRED_CHECKS:
         if check not in text:
             print(f"Missing required check: {check}", file=sys.stderr)
+            return 1
+
+    for token in REQUIRED_SECURITY_BASELINE_TOKENS:
+        if token not in text:
+            print(f"Missing security baseline policy token: {token}", file=sys.stderr)
             return 1
 
     print("Policy validation passed.")

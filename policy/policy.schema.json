@@ -8,6 +8,7 @@
     "families",
     "required_checks",
     "required_log_fields",
+    "security_baseline",
     "feature_flag_required_fields"
   ],
   "properties": {
@@ -29,8 +30,9 @@
           "name": {"type": "string"},
           "platforms": {
             "type": "array",
-            "items": {"type": "string", "enum": ["web", "macos", "ios"]}
-          }
+            "items": {"type": "string", "enum": ["web", "macos", "ios", "internal"]}
+          },
+          "internal_only": {"type": "boolean"}
         }
       }
     },
@@ -41,6 +43,37 @@
     "required_log_fields": {
       "type": "array",
       "items": {"type": "string"}
+    },
+    "security_baseline": {
+      "type": "object",
+      "required": [
+        "rule",
+        "effective_date",
+        "existing_repo_grace_ends_at",
+        "new_repos_require_from_day_one",
+        "enforcement",
+        "required_controls",
+        "required_files",
+        "exemption_file",
+        "exemption_required_fields",
+        "exemption_reasons",
+        "rollout_owner",
+        "rollout_requires_legacy_exception_order"
+      ],
+      "properties": {
+        "rule": {"type": "string"},
+        "effective_date": {"type": "string", "format": "date"},
+        "existing_repo_grace_ends_at": {"type": "string", "format": "date"},
+        "new_repos_require_from_day_one": {"type": "boolean"},
+        "enforcement": {"type": "object"},
+        "required_controls": {"type": "array", "items": {"type": "string"}},
+        "required_files": {"type": "array", "items": {"type": "string"}},
+        "exemption_file": {"type": "string"},
+        "exemption_required_fields": {"type": "array", "items": {"type": "string"}},
+        "exemption_reasons": {"type": "array", "items": {"type": "string"}},
+        "rollout_owner": {"type": "string"},
+        "rollout_requires_legacy_exception_order": {"type": "boolean"}
+      }
     },
     "feature_flag_required_fields": {
       "type": "array",

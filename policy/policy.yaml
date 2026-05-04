@@ -1,4 +1,4 @@
-policy_version: v1.2.0
+policy_version: v1.3.0
 compliance:
   soc2: Type II
   iso27001: Mapped
@@ -45,9 +45,54 @@ required_checks:
 - family-platform-parity
 - feature-flag-governance
 - project-lifecycle-governance
+- security-baseline
 - telemetry-compliance
 - build-reproducibility
 - release-readiness
+security_baseline:
+  rule: active DK1-owned GitHub repositories must carry the DK1 security baseline
+  effective_date: "2026-05-04"
+  existing_repo_grace_ends_at: "2026-05-18"
+  new_repos_require_from_day_one: true
+  enforcement:
+    existing_repos_before_or_on_grace_end: report
+    existing_repos_after_grace_end: block
+    new_repos: block
+  required_controls:
+  - codeql
+  - dependabot
+  - dependency_review
+  - security_audit
+  - shannon_staging_guardrails
+  - security_md
+  - codeowners_security_ownership
+  - gitignore_runtime_security_ignores
+  - validate_baseline_script
+  required_files:
+  - .github/workflows/codeql.yml
+  - .github/dependabot.yml
+  - .github/workflows/dependency-review.yml
+  - .github/dependency-review-config.yml
+  - .github/workflows/security-audit.yml
+  - .github/workflows/shannon-staging.yml
+  - SECURITY.md
+  - .github/CODEOWNERS
+  - .gitignore
+  - security/shannon-dk1.template.yaml
+  - scripts/security/validate_baseline.py
+  exemption_file: security/baseline-exemption.json
+  exemption_required_fields:
+  - reason
+  - owner
+  - expires_at
+  exemption_reasons:
+  - archived_or_retired
+  - external_vendor_mirror
+  - read_only_or_permission_blocked
+  - inherited_monorepo_baseline
+  - conflicting_hand_maintained_security_workflow
+  rollout_owner: dev-force-lead
+  rollout_requires_legacy_exception_order: true
 required_log_fields:
 - timestamp
 - family
