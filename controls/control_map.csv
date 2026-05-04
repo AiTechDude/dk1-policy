@@ -7,3 +7,4 @@ CTRL-008,Project lifecycle synchronization governance,CC7.2,A.8.32,project-lifec
 CTRL-005,Observability required fields,CC7.2,A.8.15,telemetry-compliance check
 CTRL-006,Release approval gates,CC8.1,A.5.37,protected environment approvals
 CTRL-007,Nightly drift monitoring,CC7.2,A.8.16,guardian synchronization-health report
+CTRL-009,Security baseline enforcement,CC7.2,A.8.8,Security tab baseline history and security-baseline governance CI logs
