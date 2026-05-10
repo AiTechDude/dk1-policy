@@ -9,3 +9,6 @@ security/reports/
 shannon-dk1.runtime.yaml
 .env.*
 !.env.example
+
+# Obsidian operator-local config (operator-maintained, not shared)
+.obsidian/
