@@ -1,0 +1,40 @@
+# Sentry project slug → DK1 repo slug map.
+# Used by CC /v1/dev/intake/sentry to route a Sentry issue to the right
+# dk1-dev-team task target. Unmapped projects fall through to needs_review
+# with a "no repo mapping" warning.
+#
+# Authored: 2026-05-16
+
+policy_version: sentry_repo_map.v1.0.0
+last_reviewed: 2026-05-16
+
+mappings:
+  # CC itself
+  dk1-command-center: dk1-command-center
+  command-center: dk1-command-center
+  cc: dk1-command-center
+
+  # Backbone / infra
+  dk1-backbone: dk1-skills          # backbone fixes typically land via dk1-skills patterns first
+  dk1-jarvis: dk1-skills            # jarvis changes are sensitive; route to skills review first
+  dk1-sentinel: dk1-ops
+  dk1-sentinel-qc: dk1-ops
+  dk1-lance: dk1-ops
+
+  # Public-facing
+  dk1-ai: dk1-ai
+  dk1.ai: dk1-ai
+
+  # Operator surfaces
+  dk1-control-tower: dk1-control-tower
+  dk1-control-room: dk1-control-room
+
+  # Customer-facing projects route to NULL — these never get auto-tasks.
+  # The CC intake will create a packet with status='needs_review' and
+  # tag it as "no auto-allowed repo for this Sentry project."
+  dk1-capital-website: null
+  juvenile-law: null
+  hof: null
+  houses-of-finance: null
+  paris-baguette-rockville: null
+  gh-trans: null

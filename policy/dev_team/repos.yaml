@@ -1,0 +1,100 @@
+# dk1-dev-team repo allowlist.
+# Consumed by dk1-dev-team orchestrator. Any task whose target repo is not
+# in this list is rejected at lease acquisition with REPO_NOT_ALLOWED.
+#
+# Expansion gate: each repo class must clock 2 clean operational days at
+# its current tier before promoting the next class. Operator updates this
+# file by hand; no auto-promotion.
+#
+# Authored: 2026-05-16 per dk1-dev-team docs/adr/0007 + 2026-05-15 user
+#           direction ("after 2 days of clean operations").
+
+policy_version: dev_team_repos.v1.0.0
+last_reviewed: 2026-05-16
+
+repo_classes:
+  sandbox:
+    description: Disposable test sandbox. Always enabled.
+    max_risk_tier_auto: T2
+    repos:
+      - slug: dk1-dev-team-sandbox
+        worktree_root: /home/dan/dk1/worktrees/dk1-dev-team-sandbox
+        project_type: python
+        data_classification: confidential
+
+  internal_low_risk:
+    description: |
+      Internal DK1 repos with low blast radius. Mostly docs, skills, ops
+      tooling. Enabled at Day 3 after 2 clean sandbox days.
+    enabled_from: 2026-05-19   # Day 3 from 2026-05-16 (sandbox-only Days 1-2)
+    max_risk_tier_auto: T2
+    repos:
+      - slug: dk1-skills
+        worktree_root: /home/dan/dk1/worktrees/dk1-skills
+        project_type: python
+        data_classification: internal
+      - slug: dk1-ops
+        worktree_root: /home/dan/dk1/worktrees/dk1-ops
+        project_type: mixed
+        data_classification: internal
+
+  internal_infra:
+    description: |
+      Internal DK1 control-plane services. Higher blast radius — touching
+      these can break the operator's own visibility. Enabled only after
+      internal_low_risk has 2 clean days.
+    enabled_from: 2026-05-21
+    max_risk_tier_auto: T2
+    repos:
+      - slug: dk1-control-tower
+        worktree_root: /home/dan/dk1/worktrees/dk1-control-tower
+        project_type: python_fastapi
+        data_classification: internal
+      - slug: dk1-command-center
+        worktree_root: /home/dan/dk1/worktrees/dk1-command-center
+        project_type: python_fastapi
+        data_classification: internal
+        required_validations:
+          - "ruff check ."
+          - "pytest -q"
+      - slug: dk1-control-room
+        worktree_root: /home/dan/dk1/worktrees/dk1-control-room
+        project_type: mixed
+        data_classification: internal
+
+  internal_public_surface:
+    description: |
+      Public-facing internal repos (dk1.ai). Public classification means
+      cloud LLMs are allowed, but Playwright smoke is required pre-merge.
+    enabled_from: 2026-05-23
+    max_risk_tier_auto: T2
+    repos:
+      - slug: dk1-ai
+        worktree_root: /home/dan/dk1/worktrees/dk1-ai
+        project_type: nextjs
+        data_classification: public
+        required_validations:
+          - "npm run lint"
+          - "npm run build"
+          - "npx playwright test"
+
+  tailscale_manifest:
+    description: |
+      Tailscale manifest repo per user direction. Network config — T3
+      effectively, requires explicit approval per task.
+    enabled_from: 2026-05-21
+    max_risk_tier_auto: T1  # cap auto; T3 needs manual approval
+    repos:
+      - slug: dk1-tailscale-manifest
+        worktree_root: /home/dan/dk1/worktrees/dk1-tailscale-manifest
+        project_type: yaml_config
+        data_classification: confidential
+
+# Customer-facing repos: NEVER on this allowlist. Manual only.
+explicitly_excluded:
+  - dk1-capital-website
+  - juvenile-law
+  - houses-of-finance
+  - hof
+  - paris-baguette-rockville
+  - gh-trans

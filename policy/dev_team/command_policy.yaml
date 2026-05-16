@@ -1,0 +1,106 @@
+# dk1-dev-team command allowlist / requires-approval / hard-deny lists.
+# Consumed by dk1-dev-team orchestrator BEFORE subprocess execution.
+# The LLM cannot override this — enforcement is in the executor wrapper.
+#
+# Authored: 2026-05-16 (handoff doc §10, narrowed for DK1 stack)
+
+policy_version: dev_team_cmd.v1.0.0
+last_reviewed: 2026-05-16
+
+# Allowed without approval. These are the commands the executor may invoke
+# freely inside the sandboxed worktree.
+allowed_read_only:
+  - pwd
+  - ls
+  - find
+  - rg
+  - grep
+  - cat
+  - head
+  - tail
+  - sed
+  - awk
+  - git status
+  - git log
+  - git diff
+  - git show
+  - git branch
+  - python --version
+  - python -V
+  - node --version
+  - npm --version
+  - uv --version
+  - poetry --version
+  - alembic current      # read-only inspection of head
+  - alembic history
+
+allowed_safe_write:
+  - git checkout -b
+  - git worktree add
+  - git add
+  - git commit
+  - python -m pytest
+  - pytest
+  - .venv/bin/pytest
+  - ruff check
+  - ruff format
+  - mypy
+  - npm test
+  - npm run test
+  - npm run lint
+  - npm run build
+  - npm run typecheck
+  - playwright test
+  - npx playwright test
+  - make test
+  - make lint
+
+# Approval-gated. Worker pauses, opens an approval request via CC, and
+# resumes only on accept.
+requires_approval:
+  - pip install
+  - uv add
+  - uv pip install
+  - npm install
+  - npm update
+  - poetry add
+  - poetry update
+  - alembic revision
+  - alembic upgrade
+  - docker compose up
+  - docker compose down
+  - docker compose restart
+  - docker run
+  - curl
+  - wget
+  - gh pr merge
+  - gh repo
+  - gh release
+
+# Hard deny. Never executed regardless of approval; logged as policy violation.
+hard_deny:
+  - "rm -rf /"
+  - "rm -rf ~"
+  - "rm -rf $HOME"
+  - "sudo rm"
+  - "chmod -R 777"
+  - "chown -R"
+  - "docker system prune"
+  - "docker volume rm"
+  - "docker compose down -v"
+  - "git push origin main"
+  - "git push origin master"
+  - "git push --force"
+  - "git push -f"
+  - "gh pr merge --admin"
+  - "printenv"
+  - "cat .env"
+  - "cat .env."
+  - "cat /run/secrets"
+  - "tailscale serve"
+  - "tailscale funnel"
+  - "psql -c DROP"
+  - "psql -c TRUNCATE"
+  - "DROP DATABASE"
+  - "DROP TABLE"
+  - "TRUNCATE TABLE"

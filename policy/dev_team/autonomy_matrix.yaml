@@ -1,0 +1,84 @@
+# dk1-dev-team autonomy matrix
+# Authored: 2026-05-16 (see dk1-dev-team docs/adr/0007 + handoff doc §9)
+# Consumer: dk1-dev-team orchestrator at startup; CC /v1/dev/intake/* uses
+#           this to classify incoming tasks into approved vs needs_review.
+#
+# Rule: agent.data_classification (in dk1_agent.yaml) is canonical for
+# routing; this matrix governs only auto-approve eligibility, not model
+# routing. The router still rejects cloud providers on confidential routes
+# regardless of the tier here.
+
+policy_version: dev_team.v1.0.0
+last_reviewed: 2026-05-16
+reviewed_by: dan-kim
+
+risk_tiers:
+  T0_READ_ONLY:
+    description: Read-only inspection, summarization, analysis. No file edits.
+    auto_allowed: true
+    requires_pr: false
+    requires_human_review: false
+    examples:
+      - inspect repo structure
+      - summarize failing test logs
+      - generate task plan markdown
+      - draft documentation
+
+  T1_SAFE_LOCAL:
+    description: Low-risk changes in non-production branches with verification.
+    auto_allowed: true
+    requires_pr: true
+    requires_human_review: optional
+    examples:
+      - add tests
+      - update docstrings
+      - fix lint/type issues found by sentinel-qc
+      - minor UI copy
+      - refactor internal helper function
+
+  T2_CODE_CHANGES:
+    description: Feature or bug-fix changes that affect application behavior.
+    auto_allowed: true
+    requires_pr: true
+    requires_human_review: required
+    examples:
+      - API endpoint changes
+      - DB model additions without migration execution
+      - new dashboard view
+      - Sentry bug fix
+
+  T3_HIGH_RISK:
+    description: Security, auth, database, infrastructure, or dependency changes.
+    auto_allowed: false
+    requires_explicit_approval: true
+    requires_pr: true
+    examples:
+      - auth/RBAC changes
+      - alembic upgrade against prod
+      - dependency upgrades to major versions
+      - GitHub Actions permissions changes
+      - Docker compose / systemd unit changes
+      - secrets rotation
+
+  T4_DENIED:
+    description: Destructive or production-impacting actions. Never auto.
+    hard_deny: true
+    examples:
+      - production deploy
+      - dropping database tables
+      - deleting repositories
+      - exposing services to public internet
+      - reading production secrets
+      - disabling monitoring
+      - disabling tests to make CI pass
+
+# Mapping used by CC /v1/dev/intake/* when an intake source needs to pick a
+# default tier. Generators MAY override these on a per-task basis based on
+# explicit signal (e.g. "security" label → T3).
+default_tier_per_source:
+  manual: T1            # operator types in via form; T2+ chosen explicitly
+  sentry: T2            # bug fix
+  github: T2            # labeled issue
+  sentinel-qc: T1       # fix lint/type/test
+  todo: T1              # low-priority cleanup
+  dependency: T3        # advisory upgrade
